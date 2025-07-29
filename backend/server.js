@@ -21,7 +21,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: true, // Allow all origins
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -41,16 +41,15 @@ app.use((err, req, res, next) => {
 // MongoDB Connection with proper error handling
 const connectDB = async () => {
   try {
-    // For now, use local MongoDB for development
-    const mongoURI = 'mongodb://127.0.0.1:27017/finance_assistant';
-    console.log('Connecting to local MongoDB for development...');
+    const mongoURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/finance_assistant';
+    console.log('Connecting to MongoDB...');
     
     await mongoose.connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
     
-    console.log('Connected to local MongoDB successfully');
+    console.log('Connected to MongoDB successfully');
   } catch (err) {
     console.error('MongoDB connection error:', err);
     process.exit(1);
